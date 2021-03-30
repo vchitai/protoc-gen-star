@@ -26,6 +26,8 @@ type Field interface {
 	// Type returns the FieldType of this Field.
 	Type() FieldType
 
+	TypeName() string
+
 	// Required returns whether or not the field is labeled as required. This
 	// will only be true if the syntax is proto2.
 	Required() bool
@@ -92,5 +94,35 @@ func (f *field) childAtPath(path []int32) Entity {
 }
 
 func (f *field) addSourceCodeInfo(info SourceCodeInfo) { f.info = info }
+func (f *field) TypeName() string {
+	if f.desc.TypeName != nil {
+		return *f.desc.TypeName
+	}
 
+	if f.desc.Type == nil {
+		return ""
+	}
+	return typeNameMap[*f.desc.Type]
+}
+
+var typeNameMap = map[descriptor.FieldDescriptorProto_Type]string{
+	descriptor.FieldDescriptorProto_TYPE_DOUBLE:   "double",
+	descriptor.FieldDescriptorProto_TYPE_FLOAT:    "float",
+	descriptor.FieldDescriptorProto_TYPE_INT64:    "int64",
+	descriptor.FieldDescriptorProto_TYPE_UINT64:   "uint64",
+	descriptor.FieldDescriptorProto_TYPE_INT32:    "int32",
+	descriptor.FieldDescriptorProto_TYPE_FIXED64:  "fixed64",
+	descriptor.FieldDescriptorProto_TYPE_FIXED32:  "fixed32",
+	descriptor.FieldDescriptorProto_TYPE_BOOL:     "bool",
+	descriptor.FieldDescriptorProto_TYPE_STRING:   "string",
+	descriptor.FieldDescriptorProto_TYPE_GROUP:    "",
+	descriptor.FieldDescriptorProto_TYPE_MESSAGE:  "",
+	descriptor.FieldDescriptorProto_TYPE_BYTES:    "bytes",
+	descriptor.FieldDescriptorProto_TYPE_UINT32:   "uint32",
+	descriptor.FieldDescriptorProto_TYPE_ENUM:     "",
+	descriptor.FieldDescriptorProto_TYPE_SFIXED32: "sfixed32",
+	descriptor.FieldDescriptorProto_TYPE_SFIXED64: "sfixed64",
+	descriptor.FieldDescriptorProto_TYPE_SINT32:   "sint32",
+	descriptor.FieldDescriptorProto_TYPE_SINT64:   "sint64",
+}
 var _ Field = (*field)(nil)

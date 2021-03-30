@@ -222,7 +222,7 @@ type XField struct {
 }
 
 func (x XField) DescribeSelf() string {
-	return fmt.Sprintf("%v %s = %v;", x.Descriptor().GetTypeName(), x.Name(), x.Descriptor().GetNumber())
+	return fmt.Sprintf("%v %s = %v;", x.TypeName(), x.Name(), x.Descriptor().GetNumber())
 }
 
 type XOneOf struct {

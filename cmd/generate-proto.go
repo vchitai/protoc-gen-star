@@ -19,12 +19,12 @@ func main() {
 		}
 		if f.ProtoName() == "pb" {
 			for _, k := range f.Files() {
-				pgs.ExtensibleFile{File: k}.AddMethod("ProtoNameTitle", pgs.Function{
-					Method: "post",
-					Path:   "/extra",
-					Name:   "Extra",
-					Extra:  `body:"*"`,
-				})
+				//pgs.ExtensibleFile{File: k}.AddMethod("ProtoNameTitle", pgs.Function{
+				//	Method: "post",
+				//	Path:   "/extra",
+				//	Name:   "Extra",
+				//	Extra:  `body:"*"`,
+				//})
 				fmt.Println(pgs.XFile{k}.DescribeSelf())
 			}
 		}
