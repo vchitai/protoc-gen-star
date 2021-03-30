@@ -53,16 +53,16 @@ func (ef ExtensibleFile) AddMethod(target string, function Function) {
 	}
 }
 func (ef ExtensibleFile) AddMessage(name string) {
-	for _, m := range ef.AllMessages() {
+	for _, m := range ef.Messages() {
 		if m.Name().String() == name {
 			return
 		}
-		ef.addMessage(&msg{
-			desc: &descriptorpb.DescriptorProto{
-				Name: &name,
-			},
-		})
 	}
+	ef.addMessage(&msg{
+		desc: &descriptorpb.DescriptorProto{
+			Name: &name,
+		},
+	})
 }
 
 type DescriberMixin interface {
