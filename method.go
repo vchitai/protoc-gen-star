@@ -36,8 +36,8 @@ type method struct {
 	service Service
 
 	in, out Message
-
-	info SourceCodeInfo
+	options string
+	info    SourceCodeInfo
 }
 
 func (m *method) Name() Name                                    { return Name(m.desc.GetName()) }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	plugin_go "github.com/golang/protobuf/protoc-gen-go/plugin"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 type workflow interface {
@@ -34,6 +35,13 @@ func (wf *standardWorkflow) Init(g *Generator) AST {
 	err = proto.Unmarshal(data, req)
 	wf.CheckErr(err, "parsing input proto")
 	wf.Assert(len(req.FileToGenerate) > 0, "no files to generate")
+
+	wf.Debug("parsing input protoset")
+	descriptorSet := new(descriptorpb.FileDescriptorSet)
+	err = proto.Unmarshal(data, descriptorSet)
+	wf.CheckErr(err, "parsing input protoset")
+
+	req.ProtoFile = descriptorSet.File
 
 	wf.Debug("parsing command-line params")
 	wf.params = ParseParameters(req.GetParameter())
