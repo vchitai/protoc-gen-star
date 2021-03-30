@@ -52,6 +52,18 @@ func (ef ExtensibleFile) AddMethod(target string, function Function) {
 		})
 	}
 }
+func (ef ExtensibleFile) AddMessage(name string) {
+	for _, m := range ef.AllMessages() {
+		if m.Name().String() == name {
+			return
+		}
+		ef.addMessage(&msg{
+			desc: &descriptorpb.DescriptorProto{
+				Name: &name,
+			},
+		})
+	}
+}
 
 type DescriberMixin interface {
 	DescribeSelf() string
@@ -139,7 +151,7 @@ type XMethod struct {
 func (x XMethod) DescribeSelf() string {
 	return fmt.Sprintf(
 		`rpc %s(%s) returns (%s) {
-		option %s
+		option %s;
 	}
 	`,
 		x.Name(),
