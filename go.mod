@@ -1,4 +1,4 @@
-module github.com/lyft/protoc-gen-star
+module github.com/vchitai/protoc-gen-star
 
 go 1.14
 

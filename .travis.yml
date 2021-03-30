@@ -1,6 +1,6 @@
 language: go
 go: "1.14.6"
-go_import_path: github.com/lyft/protoc-gen-star
+go_import_path: github.com/vchitai/protoc-gen-star
 
 env:
   matrix:

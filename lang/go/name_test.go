@@ -3,7 +3,7 @@ package pgsgo
 import (
 	"testing"
 
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/vchitai/protoc-gen-star"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

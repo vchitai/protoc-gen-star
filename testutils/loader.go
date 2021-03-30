@@ -8,7 +8,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/vchitai/protoc-gen-star"
 	"github.com/spf13/afero"
 )
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/vchitai/protoc-gen-star"
 	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"

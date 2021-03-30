@@ -1,4 +1,4 @@
-# protoc-gen-star (PG*) [![Build Status](https://travis-ci.org/lyft/protoc-gen-star.svg?branch=master)](https://travis-ci.org/lyft/protoc-gen-star) [![GoDoc](https://godoc.org/github.com/lyft/protoc-gen-star?status.svg)](https://godoc.org/github.com/lyft/protoc-gen-star)
+# protoc-gen-star (PG*) [![Build Status](https://travis-ci.org/vchitai/protoc-gen-star.svg?branch=master)](https://travis-ci.org/vchitai/protoc-gen-star) [![GoDoc](https://godoc.org/github.com/vchitai/protoc-gen-star?status.svg)](https://godoc.org/github.com/vchitai/protoc-gen-star)
 
 **!!! THIS PROJECT IS A WORK-IN-PROGRESS | THE API SHOULD BE CONSIDERED UNSTABLE !!!**
 
@@ -7,7 +7,7 @@ _PG* is a protoc plugin library for efficient proto-based code generation_
 ```go
 package main
 
-import "github.com/lyft/protoc-gen-star"
+import "github.com/vchitai/protoc-gen-star"
 
 func main() {
   pgs.Init(pgs.DebugEnv("DEBUG")).
@@ -21,7 +21,7 @@ func main() {
 
 ### Documentation
 
-While this README seeks to describe many of the nuances of `protoc` plugin development and using PG*, the true documentation source is the code itself. The Go language is self-documenting and provides tools for easily reading through it and viewing examples. The docs can be viewed on [GoDoc](https://godoc.org/github.com/lyft/protoc-gen-star) or locally by running `make docs`, which will start a `godoc` server and open them in the default browser.
+While this README seeks to describe many of the nuances of `protoc` plugin development and using PG*, the true documentation source is the code itself. The Go language is self-documenting and provides tools for easily reading through it and viewing examples. The docs can be viewed on [GoDoc](https://godoc.org/github.com/vchitai/protoc-gen-star) or locally by running `make docs`, which will start a `godoc` server and open them in the default browser.
 
 ### Roadmap
 
@@ -292,7 +292,7 @@ PG* permits mutating the `Parameters` via the `MutateParams` `InitOption`. By pa
 
 While implemented in Go, PG* seeks to be language agnostic in what it can do. Therefore, beyond the pre-generated base descriptor types, PG* has no dependencies on the protoc-gen-go (PGG) package. However, there are many nuances that each language's protoc-plugin introduce that can be generalized. For instance, PGG package naming, import paths, and output paths are a complex interaction of the proto package name, the `go_package` file option, and parameters passed to protoc. While PG*'s core API should not be overloaded with many language-specific methods, subpackages can be provided that can operate on `Parameters` and `Entities` to derive the appropriate results.
 
-PG* currently implements the [pgsgo](https://godoc.org/github.com/lyft/protoc-gen-star/lang/go/) subpackage to provide these utilities to plugins targeting the Go language. Future subpackages are planned to support a variety of languages.
+PG* currently implements the [pgsgo](https://godoc.org/github.com/vchitai/protoc-gen-star/lang/go/) subpackage to provide these utilities to plugins targeting the Go language. Future subpackages are planned to support a variety of languages.
 
 ## PG* Development & Make Targets
 
@@ -303,8 +303,8 @@ PG* seeks to provide all the tools necessary to rapidly and ergonomically extend
 For developing on PG*, you should install the package within the `GOPATH`. PG* uses [glide][glide] for dependency management.
 
 ```sh
-go get -u github.com/lyft/protoc-gen-star
-cd $GOPATH/src/github.com/lyft/protoc-gen-star
+go get -u github.com/vchitai/protoc-gen-star
+cd $GOPATH/src/github.com/vchitai/protoc-gen-star
 make vendor
 ```
 
@@ -366,13 +366,13 @@ PG* uses [TravisCI][travis] to validate all code changes. Please view the [confi
 
 [glide]: http://glide.sh
 [pgg]: https://github.com/golang/protobuf/tree/master/protoc-gen-go
-[pge]: https://github.com/lyft/protoc-gen-star/tree/master/testdata/protoc-gen-example
-[travis]: https://travis-ci.com/lyft/protoc-gen-star
-[travis.yml]: https://github.com/lyft/protoc-gen-star/tree/master/.travis.yml
-[module]: https://github.com/lyft/protoc-gen-star/blob/master/module.go
+[pge]: https://github.com/vchitai/protoc-gen-star/tree/master/testdata/protoc-gen-example
+[travis]: https://travis-ci.com/vchitai/protoc-gen-star
+[travis.yml]: https://github.com/vchitai/protoc-gen-star/tree/master/.travis.yml
+[module]: https://github.com/vchitai/protoc-gen-star/blob/master/module.go
 [pb]: https://developers.google.com/protocol-buffers/
-[context]: https://github.com/lyft/protoc-gen-star/tree/master/build_context.go
-[visitor]: https://github.com/lyft/protoc-gen-star/tree/master/node.go
-[params]: https://github.com/lyft/protoc-gen-star/tree/master/parameters.go
-[make]: https://github.com/lyft/protoc-gen-star/blob/master/Makefile
+[context]: https://github.com/vchitai/protoc-gen-star/tree/master/build_context.go
+[visitor]: https://github.com/vchitai/protoc-gen-star/tree/master/node.go
+[params]: https://github.com/vchitai/protoc-gen-star/tree/master/parameters.go
+[make]: https://github.com/vchitai/protoc-gen-star/blob/master/Makefile
 [single]: https://github.com/golang/protobuf/pull/40

@@ -7,7 +7,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/vchitai/protoc-gen-star"
 )
 
 var nonAlphaNumPattern = regexp.MustCompile("[^a-zA-Z0-9]")

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	pgs "github.com/lyft/protoc-gen-star"
+	pgs "github.com/vchitai/protoc-gen-star"
 )
 
 func main() {

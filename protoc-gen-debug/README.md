@@ -15,7 +15,7 @@ make bin/protoc-gen-debug
 For a global install into `$GOPATH/bin`:
 
 ```bash
-go install github.com/lyft/protoc-gen-star/protoc-gen-debug
+go install github.com/vchitai/protoc-gen-star/protoc-gen-debug
 ```
 
 ## Usage
