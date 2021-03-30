@@ -211,7 +211,8 @@ func (x XMessage) DescribeSelf() string {
 	return fmt.Sprintf(
 		`message %s {
 	%s
-}`,
+}
+`,
 		x.Name(),
 		s)
 }
@@ -221,7 +222,7 @@ type XField struct {
 }
 
 func (x XField) DescribeSelf() string {
-	return fmt.Sprintf("%v %s = %v;", x.Type().ProtoType(), x.Name(), x.Type().ProtoLabel())
+	return fmt.Sprintf("%v %s = %v;", x.Type().ProtoType().String(), x.Name(), x.Descriptor().GetNumber())
 }
 
 type XOneOf struct {
