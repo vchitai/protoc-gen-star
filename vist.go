@@ -23,8 +23,11 @@ type ExtensibleFile struct {
 
 func (ef ExtensibleFile) AddMethod(target string, function Function) {
 	for _, s := range ef.Services() {
+		if s.Name().String() != target {
+			continue
+		}
 		for _, m := range s.Methods() {
-			if m.Name().String() == target {
+			if function.Name == m.Name().UpperCamelCase().String() {
 				return
 			}
 		}
@@ -222,7 +225,7 @@ type XField struct {
 }
 
 func (x XField) DescribeSelf() string {
-	return fmt.Sprintf("%v %s = %v;", x.TypeName(), x.Name(), x.Descriptor().GetNumber())
+	return fmt.Sprintf("%v %s = %v;\n", x.TypeName(), x.Name(), x.Descriptor().GetNumber())
 }
 
 type XOneOf struct {

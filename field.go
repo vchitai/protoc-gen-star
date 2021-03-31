@@ -1,6 +1,8 @@
 package pgs
 
 import (
+	"strings"
+
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 )
@@ -96,7 +98,8 @@ func (f *field) childAtPath(path []int32) Entity {
 func (f *field) addSourceCodeInfo(info SourceCodeInfo) { f.info = info }
 func (f *field) TypeName() string {
 	if f.desc.TypeName != nil {
-		return *f.desc.TypeName
+		s := strings.Split(*f.desc.TypeName, ".")
+		return s[len(s)-1]
 	}
 
 	if f.desc.Type == nil {
