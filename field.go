@@ -1,6 +1,7 @@
 package pgs
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/golang/protobuf/proto"
@@ -98,8 +99,31 @@ func (f *field) childAtPath(path []int32) Entity {
 func (f *field) addSourceCodeInfo(info SourceCodeInfo) { f.info = info }
 func (f *field) TypeName() string {
 	if f.desc.TypeName != nil {
-		s := strings.Split(*f.desc.TypeName, ".")
-		return s[len(s)-1]
+		typeName := *f.desc.TypeName
+		s := strings.Split(typeName, ".")
+		typeName = s[len(s)-1]
+		// handle map type
+		if strings.HasSuffix(typeName, "Entry") {
+			var keyType, valueType string
+			for _, nt := range f.msg.Descriptor().NestedType {
+				if *nt.Name != typeName {
+					continue
+				}
+				for _, fld := range nt.Field {
+					if *fld.Name == "key" {
+						keyType = (&field{desc: fld}).TypeName()
+					}
+					if *fld.Name == "value" {
+						valueType = (&field{desc: fld}).TypeName()
+					}
+				}
+			}
+			if len(keyType) > 0 && len(valueType) > 0 {
+				return fmt.Sprintf("map<%s,%s>", keyType, valueType)
+			}
+		}
+
+		return typeName
 	}
 
 	if f.desc.Type == nil {

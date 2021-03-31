@@ -10,6 +10,8 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
+const indentSize = 4
+
 type Function struct {
 	Method string
 	Path   string
@@ -79,7 +81,6 @@ var _ DescriberMixin = &XEnumValue{}
 var _ DescriberMixin = &XMessage{}
 var _ DescriberMixin = &XMethod{}
 var _ DescriberMixin = &XOneOf{}
-var _ DescriberMixin = &XPackage{}
 var _ DescriberMixin = &XService{}
 
 type XFile struct {
@@ -94,20 +95,19 @@ func (x XFile) DescribeSelf() string {
 	s := ""
 
 	for _, service := range x.Services() {
-		s += XService{service}.DescribeSelf()
+		s += XService{service}.DescribeSelf() + "\n"
 	}
 
 	for _, m := range x.Messages() {
-		s += XMessage{m}.DescribeSelf()
+		s += XMessage{m}.DescribeSelf() + "\n"
 	}
 
 	for _, e := range x.Enums() {
-		s += XEnum{e}.DescribeSelf()
+		s += XEnum{e}.DescribeSelf() + "\n"
 	}
 
-	return fmt.Sprintf(
-		`
-syntax = "%s";
+	finale := fmt.Sprintf(
+		`syntax = "%s";
 package %s;
 
 option (gogoproto.unmarshaler_all) = true;
@@ -119,14 +119,27 @@ option (gogoproto.marshaler_all) = true;
 %s
 `, x.Syntax().String(), x.Package().ProtoName().String(), imp, s,
 	)
+
+	return formatMultiline(finale)
 }
 
-type XPackage struct {
-	Package
-}
+func formatMultiline(s string) string {
+	res := &strings.Builder{}
+	lines := strings.Split(s, "\n")
+	var indentLvl int
+	for _, line := range lines {
+		var lineBreak = 1
+		if len(line) > 0 && line[len(line)-1] == '}' {
+			indentLvl -= indentSize
+			lineBreak++
+		}
+		res.WriteString(fmt.Sprintf("%s%s%s", strings.Repeat(" ", indentLvl), line, strings.Repeat("\n", lineBreak)))
+		if len(line) > 0 && line[len(line)-1] == '{' {
+			indentLvl += indentSize
+		}
+	}
 
-func (x XPackage) DescribeSelf() string {
-	return fmt.Sprintf("package %s", x.ProtoName().String())
+	return res.String()
 }
 
 type XService struct {
@@ -136,11 +149,11 @@ type XService struct {
 func (x XService) DescribeSelf() string {
 	methods := ""
 	for _, m := range x.Methods() {
-		methods += XMethod{m}.DescribeSelf()
+		methods += XMethod{m}.DescribeSelf() + "\n"
 	}
-	return fmt.Sprintf(`
-service %s {
-	%s
+
+	return fmt.Sprintf(`service %s {
+%s
 }`,
 		x.Name(),
 		methods,
@@ -154,9 +167,8 @@ type XMethod struct {
 func (x XMethod) DescribeSelf() string {
 	return fmt.Sprintf(
 		`rpc %s(%s) returns (%s) {
-		option %s;
-	}
-	`,
+%s
+}`,
 		x.Name(),
 		x.Input().Name(),
 		x.Output().Name(),
@@ -165,7 +177,7 @@ func (x XMethod) DescribeSelf() string {
 }
 
 func fmtOption(s string) string {
-	return strings.ReplaceAll(strings.ReplaceAll(s, "[", "("), "]:", ")=")
+	return "option" + strings.ReplaceAll(strings.ReplaceAll(s, "[", "("), "]:", ")=") + ";"
 }
 
 type XEnum struct {
@@ -175,11 +187,10 @@ type XEnum struct {
 func (x XEnum) DescribeSelf() string {
 	s := ""
 	for _, ev := range x.Values() {
-		s += XEnumValue{ev}.DescribeSelf()
+		s += XEnumValue{ev}.DescribeSelf() + "\n"
 	}
-	return fmt.Sprintf(`
-enum %s {
-	%s
+	return fmt.Sprintf(`enum %s {
+%s
 }`,
 		x.Name(),
 		s)
@@ -200,22 +211,21 @@ type XMessage struct {
 func (x XMessage) DescribeSelf() string {
 	s := ""
 	for _, e := range x.Enums() {
-		s += XEnum{e}.DescribeSelf()
+		s += XEnum{e}.DescribeSelf() + "\n"
 	}
 	for _, m := range x.Messages() {
-		s += XMessage{m}.DescribeSelf()
+		s += XMessage{m}.DescribeSelf() + "\n"
 	}
 	for _, f := range x.Fields() {
-		s += XField{f}.DescribeSelf()
+		s += XField{f}.DescribeSelf() + "\n"
 	}
 	for _, oo := range x.OneOfs() {
-		s += XOneOf{oo}.DescribeSelf()
+		s += XOneOf{oo}.DescribeSelf() + "\n"
 	}
 	return fmt.Sprintf(
 		`message %s {
-	%s
-}
-`,
+%s
+}`,
 		x.Name(),
 		s)
 }
@@ -225,7 +235,7 @@ type XField struct {
 }
 
 func (x XField) DescribeSelf() string {
-	return fmt.Sprintf("%v %s = %v;\n", x.TypeName(), x.Name(), x.Descriptor().GetNumber())
+	return fmt.Sprintf("%v %s = %v;", x.TypeName(), x.Name(), x.Descriptor().GetNumber())
 }
 
 type XOneOf struct {
@@ -235,11 +245,10 @@ type XOneOf struct {
 func (x XOneOf) DescribeSelf() string {
 	s := ""
 	for _, f := range x.Fields() {
-		s += XField{f}.DescribeSelf()
+		s += XField{f}.DescribeSelf() + "\n"
 	}
-	return fmt.Sprintf(`
-oneof %s {
-	%s
+	return fmt.Sprintf(`oneof %s {
+%s
 }`,
 		x.Name(),
 		s)
