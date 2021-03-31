@@ -19,6 +19,12 @@ type Function struct {
 	Extra  string
 }
 
+type AField struct {
+	TypeName string
+	Name     string
+	Number   int32
+}
+
 type ExtensibleFile struct {
 	File
 }
@@ -57,16 +63,25 @@ func (ef ExtensibleFile) AddMethod(target string, function Function) {
 		})
 	}
 }
-func (ef ExtensibleFile) AddMessage(name string) {
+func (ef ExtensibleFile) AddMessage(name string, fields ...AField) {
 	for _, m := range ef.Messages() {
 		if m.Name().String() == name {
 			return
 		}
 	}
+	flds := make([]Field, 0, len(fields))
+	for _, fld := range fields {
+		flds = append(flds, &field{
+			typeName: fld.TypeName,
+			name:     fld.Name,
+			number:   fld.Number,
+		})
+	}
 	ef.addMessage(&msg{
 		desc: &descriptorpb.DescriptorProto{
 			Name: &name,
 		},
+		fields: flds,
 	})
 }
 

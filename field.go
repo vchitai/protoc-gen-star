@@ -35,6 +35,8 @@ type Field interface {
 	// will only be true if the syntax is proto2.
 	Required() bool
 
+	Number() int32
+
 	setMessage(m Message)
 	setOneOf(o OneOf)
 	addType(t FieldType)
@@ -47,10 +49,26 @@ type field struct {
 	oneof OneOf
 	typ   FieldType
 
-	info SourceCodeInfo
+	info     SourceCodeInfo
+	typeName string
+	name     string
+	number   int32
 }
 
-func (f *field) Name() Name                                   { return Name(f.desc.GetName()) }
+func (f *field) Name() Name {
+	if len(f.name) > 0 {
+		return Name(f.name)
+	} else {
+		return Name(f.desc.GetName())
+	}
+}
+func (f *field) Number() int32 {
+	if f.number > 0 {
+		return f.number
+	} else {
+		return f.desc.GetNumber()
+	}
+}
 func (f *field) FullyQualifiedName() string                   { return f.fqn }
 func (f *field) Syntax() Syntax                               { return f.msg.Syntax() }
 func (f *field) Package() Package                             { return f.msg.Package() }
@@ -98,6 +116,9 @@ func (f *field) childAtPath(path []int32) Entity {
 
 func (f *field) addSourceCodeInfo(info SourceCodeInfo) { f.info = info }
 func (f *field) TypeName() string {
+	if len(f.typeName) > 0 {
+		return f.typeName
+	}
 	if f.desc.TypeName != nil {
 		typeName := *f.desc.TypeName
 		s := strings.Split(typeName, ".")
